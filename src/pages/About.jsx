@@ -90,7 +90,7 @@ function About() {
           className="text-center"
         >
           <a
-            href="https://divya-color-home.netlify.app"
+            href="https://maps.app.goo.gl/tY896kkYeoKJzoqw9"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-primary-600 hover:bg-primary-700 text-white px-8 py-3 rounded-lg transition-colors"

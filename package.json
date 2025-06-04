@@ -1,8 +1,20 @@
 {
   "name": "divya-color-home",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "homepage": "https://github.com/nikampratik9096/project#readme",
+  "bugs": {
+    "url": "https://github.com/nikampratik9096/project/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikampratik9096/project.git"
+  },
+  "license": "ISC",
+  "author": "Pratik",
   "type": "module",
+  "main": "eslint.config.js",
   "scripts": {
     "dev": "vite --host  0.0.0.0 ",
     "build": "vite build",
@@ -26,7 +38,7 @@
     "react-icons": "^5.0.1",
     "react-intersection-observer": "^9.8.1",
     "react-leaflet": "^4.2.1",
-    "react-router-dom": "^6.22.3",
+    "react-router-dom": "^6.29.0",
     "react-slick": "^0.30.2",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.7.4",

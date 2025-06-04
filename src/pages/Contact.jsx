@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import axios from 'axios'
 import 'leaflet/dist/leaflet.css'
 
 function Contact() {
@@ -18,24 +17,28 @@ function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
-    setStatus('Sending message...')
+    setStatus('Preparing message...')
     setIsError(false)
     
     try {
-      const response = await axios.post('http://localhost:3000/api/send-sms', formData)
-      
-      if (response.data.success) {
-        setStatus(response.data.message)
-        setFormData({ name: '', email: '', phone: '', message: '' })
-        setIsError(false)
-      } else {
-        throw new Error(response.data.message || 'Failed to send message')
+      // Validate form data
+      if (!formData.name || !formData.phone || !formData.message) {
+        throw new Error('Please fill all required fields')
       }
+
+      // Format the message
+      const whatsappMessage = `Name: ${formData.name}%0APhone: ${formData.phone}%0AEmail: ${formData.email}%0AMessage: ${formData.message}`
+      
+      // Open WhatsApp with the pre-filled message
+      window.open(`https://wa.me/919096457620?text=${whatsappMessage}`, '_blank')
+      
+      setStatus('WhatsApp is opening with your message...')
+      setFormData({ name: '', email: '', phone: '', message: '' })
+      setIsError(false)
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Failed to send message. Please try again.'
-      setStatus(errorMessage)
+      setStatus(error.message)
       setIsError(true)
-      console.error('Error sending message:', error)
+      console.error('Error:', error)
     } finally {
       setIsSubmitting(false)
     }
@@ -85,13 +88,12 @@ function Contact() {
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email *
+                  Email
                 </label>
                 <input
                   type="email"
                   id="email"
                   name="email"
-                  required
                   value={formData.email}
                   onChange={handleChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
@@ -138,7 +140,7 @@ function Contact() {
                   isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
-                {isSubmitting ? 'Sending...' : 'Send Message'}
+                {isSubmitting ? 'Preparing...' : 'Send via WhatsApp'}
               </button>
 
               {status && (
@@ -209,4 +211,4 @@ function Contact() {
   )
 }
 
-export default Contact
+export default Contact;
