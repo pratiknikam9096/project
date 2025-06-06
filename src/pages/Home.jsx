@@ -1,8 +1,38 @@
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import video from '../assets/v1.mp4'
 
 function Home() {
+  const [showPopup, setShowPopup] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPopup(false)
+    }, 15000)
+    return () => clearTimeout(timer)
+  }, [])
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
+      {/* 🔹 Corner Video Ad */}
+      {showPopup && (
+        <div className="fixed bottom-4 right-4 z-40 w-[280px] rounded-xl shadow-lg bg-white overflow-hidden">
+          <button
+            onClick={() => setShowPopup(false)}
+            className="absolute top-1 right-1 z-50 bg-red-500 text-white rounded-full px-2 py-1 text-sm"
+          >
+            ✕
+          </button>
+          <video
+            src={video}
+            autoPlay
+            muted
+            controls
+            className="w-full h-[160px] object-cover"
+          />
+        </div>
+      )}
+
       {/* Hero Section */}
       <motion.section 
         initial={{ opacity: 0 }}
@@ -45,7 +75,7 @@ function Home() {
         </div>
       </motion.section>
 
-      {/* Quick Links Section */}
+      {/* Services Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Our Services</h2>
@@ -60,11 +90,11 @@ function Home() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow hover-scale"
+                className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
               >
                 <div className="text-4xl mb-4">{service.icon}</div>
                 <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-                <a href={"/Projects"} className="text-primary-600 hover:text-primary-700">
+                <a href="/Projects" className="text-primary-600 hover:text-primary-700">
                   Learn More →
                 </a>
               </motion.div>
