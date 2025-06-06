@@ -1,6 +1,18 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
+// ✅ Correct image imports relative to "src/pages"
+import img1 from '../assets/1.jpg'
+import img2 from '../assets/2.jpg'
+import img3 from '../assets/3.jpg'
+import img4 from '../assets/4.jpg'
+import img5 from '../assets/5.jpg'
+import img6 from '../assets/6.jpg'
+import img7 from '../assets/7.jpg'
+import img8 from '../assets/8.jpg'
+import img9 from '../assets/9.jpg'
+import img10 from '../assets/10.jpg'
+
 function Projects() {
   const [activeFilter, setActiveFilter] = useState('all')
 
@@ -13,34 +25,16 @@ function Projects() {
   ]
 
   const projects = [
-    {
-      id: 1,
-      title: 'Modern Living Room',
-      category: 'home',
-      image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb3',
-      description: 'Contemporary design with warm color palette'
-    },
-    {
-      id: 2,
-      title: 'Corporate Office',
-      category: 'office',
-      image: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2',
-      description: 'Professional space with elegant finish'
-    },
-    {
-      id: 3,
-      title: 'Factory Interior',
-      category: 'industrial',
-      image: 'https://images.unsplash.com/photo-1553413077-190dd305871c',
-      description: 'Durable industrial coating'
-    },
-    {
-      id: 4,
-      title: 'Retail Store',
-      category: 'commercial',
-      image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8',
-      description: 'Vibrant retail environment'
-    }
+    { id: 1, title: 'Modern Living Room', category: 'home', image: img1, description: 'Contemporary design with warm color palette' },
+    { id: 2, title: 'Corporate Office', category: 'office', image: img2, description: 'Professional space with elegant finish' },
+    { id: 3, title: 'Factory Interior', category: 'industrial', image: img3, description: 'Durable industrial coating' },
+    { id: 4, title: 'Retail Store', category: 'commercial', image: img4, description: 'Vibrant retail environment' },
+    { id: 5, title: 'Minimalist Bedroom', category: 'home', image: img5, description: 'Simple yet cozy bedroom setup' },
+    { id: 6, title: 'Executive Office', category: 'office', image: img6, description: 'Sophisticated executive workspace' },
+    { id: 7, title: 'Warehouse Interior', category: 'industrial', image: img7, description: 'Spacious warehouse facility' },
+    { id: 8, title: 'Mall Interior', category: 'commercial', image: img8, description: 'Large-scale commercial mall space' },
+    { id: 9, title: 'Luxury Living', category: 'home', image: img9, description: 'Lavish living room with modern decor' },
+    { id: 10, title: 'Startup Office', category: 'office', image: img10, description: 'Creative space for startup teams' }
   ]
 
   const filteredProjects = activeFilter === 'all'

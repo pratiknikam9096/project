@@ -64,7 +64,7 @@ function Home() {
               >
                 <div className="text-4xl mb-4">{service.icon}</div>
                 <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-                <a href={service.link} className="text-primary-600 hover:text-primary-700">
+                <a href={"/Projects"} className="text-primary-600 hover:text-primary-700">
                   Learn More →
                 </a>
               </motion.div>
