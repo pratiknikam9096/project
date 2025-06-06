@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import video from '../assets/v1.mp4'
+import Lin from '../pages/Projects'
 
 function Home() {
   const [showPopup, setShowPopup] = useState(true)
@@ -8,7 +9,7 @@ function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowPopup(false)
-    }, 15000)
+    }, 150000)
     return () => clearTimeout(timer)
   }, [])
 
@@ -94,7 +95,7 @@ function Home() {
               >
                 <div className="text-4xl mb-4">{service.icon}</div>
                 <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-                <a href="/Projects" className="text-primary-600 hover:text-primary-700">
+                <a href='\Projects' className="text-primary-600 hover:text-primary-700">
                   Learn More →
                 </a>
               </motion.div>
