@@ -1,187 +1,165 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Star, StarHalf } from 'lucide-react';
 
 function Feedback() {
-  const [reviews, setReviews] = useState([]);
-  const [newReview, setNewReview] = useState({
+  const [formData, setFormData] = useState({
     name: '',
     rating: 5,
     comment: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState({ text: '', type: '' });
+  const [message, setMessage] = useState('');
+  const [hoverRating, setHoverRating] = useState(0);
 
-  // Load reviews from localStorage on component mount
-  useEffect(() => {
-    const savedReviews = localStorage.getItem('customerReviews');
-    if (savedReviews) {
-      setReviews(JSON.parse(savedReviews));
-    }
-  }, []);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'rating' ? parseInt(value) : value
+    }));
+  };
 
-  const handleSubmit = (e) => {
+  const handleRatingClick = (rating) => {
+    setFormData(prev => ({ ...prev, rating }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setMessage({ text: '', type: '' });
+    setMessage('');
 
     try {
-      // Create new review with date
-      const reviewToAdd = {
-        ...newReview,
-        id: Date.now(), // Simple unique ID
-        date: new Date().toISOString()
-      };
+      const response = await fetch('http://localhost:5000/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
 
-      // Update reviews state and localStorage
-      const updatedReviews = [...reviews, reviewToAdd];
-      setReviews(updatedReviews);
-      localStorage.setItem('customerReviews', JSON.stringify(updatedReviews));
-
-      // Reset form
-      setNewReview({ name: '', rating: 5, comment: '' });
-      setMessage({ text: 'Review submitted successfully!', type: 'success' });
+      if (!response.ok) throw new Error('Submission failed');
+      
+      setMessage('Feedback submitted successfully!');
+      setFormData({ name: '', rating: 5, comment: '' });
     } catch (err) {
+      setMessage('Error submitting feedback');
       console.error(err);
-      setMessage({ text: 'Failed to submit review', type: 'error' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen py-16">
-      <div className="max-w-7xl mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg my-10"
+    >
+      <div className="text-center mb-6">
+        <motion.h2 
+          initial={{ scale: 0.9 }}
+          animate={{ scale: 1 }}
+          className="text-3xl font-bold text-gray-800 mb-2"
         >
-          <h1 className="text-4xl font-bold mb-4">Customer Feedback</h1>
-          <p className="text-xl text-gray-600">Share your experience with us</p>
-        </motion.div>
-
-        {message.text && (
-          <div className={`mb-6 p-4 rounded-lg ${
-            message.type === 'error' 
-              ? 'bg-red-50 text-red-800 border border-red-200' 
-              : 'bg-green-50 text-green-800 border border-green-200'
-          }`}>
-            {message.text}
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <h2 className="text-2xl font-bold mb-6">Write a Review</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  required
-                  value={newReview.name}
-                  onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="rating" className="block text-sm font-medium text-gray-700">
-                  Rating
-                </label>
-                <select
-                  id="rating"
-                  value={newReview.rating}
-                  onChange={(e) => setNewReview({ ...newReview, rating: Number(e.target.value) })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                >
-                  {[5, 4, 3, 2, 1].map((num) => (
-                    <option key={num} value={num}>
-                      {num} Star{num !== 1 ? 's' : ''}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="comment" className="block text-sm font-medium text-gray-700">
-                  Comment
-                </label>
-                <textarea
-                  id="comment"
-                  required
-                  value={newReview.comment}
-                  onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
-                  rows={4}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`w-full bg-primary-600 hover:bg-primary-700 text-white py-3 px-6 rounded-lg transition-colors ${
-                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                {isSubmitting ? 'Submitting...' : 'Submit Review'}
-              </button>
-            </form>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <h2 className="text-2xl font-bold mb-6">Recent Reviews</h2>
-            <div className="space-y-6">
-              {reviews.length === 0 ? (
-                <p className="text-gray-500">No reviews yet. Be the first to review!</p>
-              ) : (
-                [...reviews]
-                  .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by newest first
-                  .map((review) => (
-                    <motion.div
-                      key={review.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="bg-white p-6 rounded-lg shadow-md"
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold">{review.name}</h3>
-                        <span className="text-sm text-gray-500">
-                          {new Date(review.date).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <div className="flex items-center mb-4">
-                        {[...Array(5)].map((_, index) => (
-                          <span
-                            key={index}
-                            className={`text-2xl ${
-                              index < review.rating ? 'text-yellow-400' : 'text-gray-300'
-                            }`}
-                          >
-                            ★
-                          </span>
-                        ))}
-                      </div>
-                      <p className="text-gray-600">{review.comment}</p>
-                    </motion.div>
-                  ))
-              )}
-            </div>
-          </motion.div>
-        </div>
+          Share Your Feedback
+        </motion.h2>
+        <p className="text-gray-600">We value your opinion and would love to hear from you!</p>
       </div>
-    </div>
+
+      <AnimatePresence>
+        {message && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className={`p-4 mb-6 rounded-lg ${
+              message.includes('Error') 
+                ? 'bg-red-50 text-red-800 border border-red-200' 
+                : 'bg-green-50 text-green-800 border border-green-200'
+            }`}
+          >
+            {message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">Name</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            placeholder="Your name"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">Rating</label>
+          <div className="flex items-center space-x-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => handleRatingClick(star)}
+                onMouseEnter={() => setHoverRating(star)}
+                onMouseLeave={() => setHoverRating(0)}
+                className="focus:outline-none"
+              >
+                {(hoverRating || formData.rating) >= star ? (
+                  <Star className="w-8 h-8 text-yellow-400 fill-yellow-400" />
+                ) : (
+                  <Star className="w-8 h-8 text-gray-300" />
+                )}
+              </button>
+            ))}
+            <span className="ml-2 text-gray-600">
+              {formData.rating} {formData.rating === 1 ? 'Star' : 'Stars'}
+            </span>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">Comments</label>
+          <textarea
+            name="comment"
+            value={formData.comment}
+            onChange={handleChange}
+            required
+            rows={4}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            placeholder="Tell us about your experience..."
+          />
+        </div>
+
+        <motion.button
+          type="submit"
+          disabled={isSubmitting}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className={`w-full py-3 px-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all ${
+            isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+          }`}
+        >
+          {isSubmitting ? (
+            <span className="flex items-center justify-center">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Submitting...
+            </span>
+          ) : (
+            'Submit Feedback'
+          )}
+        </motion.button>
+      </form>
+    </motion.div>
   );
 }
 
