@@ -55,12 +55,18 @@ function Footer() {
             </p>
           </div>
         </div>
+        <div>
+      <Link to='/Feedbackreceive' className="text-gray-400 hover:text-white">
+                  Feedback
+                </Link>
+     </div>
         <div className="mt-8 pt-8 border-t border-gray-800 text-center">
           <p className="text-gray-400">
             © {new Date().getFullYear()} Divya Colour Home. All rights reserved.
           </p>
         </div>
       </div>
+     
     </footer>
   )
 }

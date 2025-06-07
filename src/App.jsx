@@ -1,11 +1,12 @@
 import { Routes, Route } from 'react-router-dom'
+import Feedbackreceive from './components/Feedbackreceive'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
 import About from './pages/About'
 import Projects from './pages/Projects'
 import Contact from './pages/Contact'
-import Feedback from './pages/Feedback'
+import Feedbacks from './pages/Feedbacks'
 import ColorPicker from './pages/ColorPicker'
 
 function App() {
@@ -18,8 +19,9 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/feedback" element={<Feedback />} />
+          <Route path="/Feedback" element={<Feedbacks />} />
           <Route path="/color-picker" element={<ColorPicker />} />
+          <Route path="/Feedbackreceive" element={<Feedbackreceive/>}/>
         </Routes>
       </main>
       <Footer />

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, StarHalf } from 'lucide-react';
 
-function Feedback() {
+function Feedbackreceive() {
   const [formData, setFormData] = useState({
     name: '',
     rating: 5,
@@ -163,4 +163,4 @@ function Feedback() {
   );
 }
 
-export default Feedback;
+export default Feedbackreceive;
