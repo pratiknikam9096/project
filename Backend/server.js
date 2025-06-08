@@ -13,8 +13,8 @@ mongoose.connect('mongodb://localhost:27017/local', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => console.error('MongoDB connection error:', err));
+.then(() => console.log('✅ Connected to MongoDB'))
+.catch(err => console.error('❌ MongoDB connection error:', err));
 
 // Feedback Schema
 const feedbackSchema = new mongoose.Schema({
@@ -25,21 +25,28 @@ const feedbackSchema = new mongoose.Schema({
 });
 
 const Feedback = mongoose.model('Feedback', feedbackSchema);
+
+// GET: Fetch latest feedbacks (limit = 5 by default)
 app.get('/api/feedback', async (req, res) => {
   try {
-    const feedbacks = await Feedback.find().sort({ date: -1 }); // Newest first
+    const limit = parseInt(req.query.limit) || 5;
+    const feedbacks = await Feedback.find().sort({ date: -1 }).limit(limit);
     res.json(feedbacks);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error fetching feedbacks:', err.message);
+    res.status(500).json({ error: 'Failed to fetch feedbacks' });
   }
 });
 
-
-// API Endpoint
+// POST: Add new feedback
 app.post('/api/feedback', async (req, res) => {
   try {
     const { name, rating, comment } = req.body;
-    
+
+    if (!name || rating == null || !comment) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
     const newFeedback = new Feedback({
       name,
       rating,
@@ -49,13 +56,13 @@ app.post('/api/feedback', async (req, res) => {
     const savedFeedback = await newFeedback.save();
     res.status(201).json(savedFeedback);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Error saving feedback:', err.message);
+    res.status(500).json({ error: 'Server error while saving feedback' });
   }
 });
 
 // Start Server
 const PORT = 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
