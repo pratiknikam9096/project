@@ -1,22 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const serverless = require('serverless-http');
 
 const app = express();
-
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/local', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('✅ Connected to MongoDB'))
-.catch(err => console.error('❌ MongoDB connection error:', err));
+// MongoDB Atlas URI with password included
+const mongoURI = "mongodb+srv://nikampratik2989:nikampratik2989@cluster0.rm8lmet.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-// Feedback Schema
+let isConnected = false;
+
+// Schema
 const feedbackSchema = new mongoose.Schema({
   name: String,
   rating: Number,
@@ -24,22 +20,35 @@ const feedbackSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now }
 });
 
-const Feedback = mongoose.model('Feedback', feedbackSchema);
+const Feedback = mongoose.models.Feedback || mongoose.model('Feedback', feedbackSchema);
 
-// GET: Fetch latest feedbacks (limit = 5 by default)
+// Connect to MongoDB Atlas
+async function connectDB() {
+  if (!isConnected) {
+    await mongoose.connect(mongoURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    isConnected = true;
+    console.log("✅ Connected to MongoDB Atlas");
+  }
+}
+
+// GET Feedbacks
 app.get('/api/feedback', async (req, res) => {
+  await connectDB();
   try {
     const limit = parseInt(req.query.limit) || 5;
     const feedbacks = await Feedback.find().sort({ date: -1 }).limit(limit);
     res.json(feedbacks);
   } catch (err) {
-    console.error('Error fetching feedbacks:', err.message);
     res.status(500).json({ error: 'Failed to fetch feedbacks' });
   }
 });
 
-// POST: Add new feedback
+// POST Feedback
 app.post('/api/feedback', async (req, res) => {
+  await connectDB();
   try {
     const { name, rating, comment } = req.body;
 
@@ -47,22 +56,13 @@ app.post('/api/feedback', async (req, res) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
-    const newFeedback = new Feedback({
-      name,
-      rating,
-      comment
-    });
-
+    const newFeedback = new Feedback({ name, rating, comment });
     const savedFeedback = await newFeedback.save();
     res.status(201).json(savedFeedback);
   } catch (err) {
-    console.error('Error saving feedback:', err.message);
     res.status(500).json({ error: 'Server error while saving feedback' });
   }
 });
 
-// Start Server
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+module.exports = app;
+module.exports.handler = serverless(app);
