@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom' // ✅ Added for routing
 import video from '../assets/v1.mp4'
-import Lin from '../pages/Projects'
 
 function Home() {
   const [showPopup, setShowPopup] = useState(true)
@@ -76,33 +76,33 @@ function Home() {
         </div>
       </motion.section>
 
-      {/* Services Section */}
+      {/* ✅ Services Section - FIXED */}
       <section className="py-16 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12">Our Services</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            { title: 'Interior Paints', icon: '🏠', link: '/Projects' },
-            { title: 'Exterior Paints', icon: '🏢', link: '/Projects' },
-            { title: 'Texture Finishes', icon: '🎨', link: '/Projects' },
-          ].map((service, index) => (
-            <motion.div
-              key={service.title}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-            >
-              <div className="text-4xl mb-4">{service.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-              <Link to={service.link} className="text-blue-600 hover:underline">
-                Learn More →
-              </Link>
-            </motion.div>
-          ))}
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Our Services</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { title: 'Interior Paints', icon: '🏠', link: '/Projects' },
+              { title: 'Exterior Paints', icon: '🏢', link: '/Projects' },
+              { title: 'Texture Finishes', icon: '🎨', link: '/Projects' },
+            ].map((service, index) => (
+              <motion.div
+                key={service.title}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              >
+                <div className="text-4xl mb-4">{service.icon}</div>
+                <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
+                <Link to={service.link} className="text-blue-600 hover:underline">
+                  Learn More →
+                </Link>
+              </motion.div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
     </div>
   )
 }
