@@ -7,12 +7,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Atlas URI with password included
-const mongoURI = "mongodb+srv://nikampratik2989:nikampratik2989@cluster0.rm8lmet.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+// Replace myDatabaseName with your actual DB name if you want, or leave it empty to use default
+const mongoURI = "mongodb+srv://nikampratik2989:DhSr2nePHaA8Znkt@cluster0.m8wc0ad.mongodb.net/myDatabaseName?retryWrites=true&w=majority&appName=Cluster0";
 
 let isConnected = false;
 
-// Schema
 const feedbackSchema = new mongoose.Schema({
   name: String,
   rating: Number,
@@ -22,22 +21,18 @@ const feedbackSchema = new mongoose.Schema({
 
 const Feedback = mongoose.models.Feedback || mongoose.model('Feedback', feedbackSchema);
 
-// Connect to MongoDB Atlas
 async function connectDB() {
   if (!isConnected) {
-    await mongoose.connect(mongoURI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await mongoose.connect(mongoURI);
     isConnected = true;
     console.log("✅ Connected to MongoDB Atlas");
   }
 }
 
-// GET Feedbacks
+// Routes
 app.get('/api/feedback', async (req, res) => {
-  await connectDB();
   try {
+    await connectDB();
     const limit = parseInt(req.query.limit) || 5;
     const feedbacks = await Feedback.find().sort({ date: -1 }).limit(limit);
     res.json(feedbacks);
@@ -46,10 +41,9 @@ app.get('/api/feedback', async (req, res) => {
   }
 });
 
-// POST Feedback
 app.post('/api/feedback', async (req, res) => {
-  await connectDB();
   try {
+    await connectDB();
     const { name, rating, comment } = req.body;
 
     if (!name || rating == null || !comment) {
@@ -63,6 +57,22 @@ app.post('/api/feedback', async (req, res) => {
     res.status(500).json({ error: 'Server error while saving feedback' });
   }
 });
+
+// Start server after DB connection
+async function startServer() {
+  try {
+    await connectDB();
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to connect to MongoDB:', error);
+    process.exit(1);
+  }
+}
+
+startServer();
 
 module.exports = app;
 module.exports.handler = serverless(app);
