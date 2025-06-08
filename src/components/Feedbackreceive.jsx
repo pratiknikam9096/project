@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, StarHalf } from 'lucide-react';
+import { Star } from 'lucide-react';
 
 function Feedbackreceive() {
+  const API_BASE_URL =  'http://localhost:5001';
+
   const [formData, setFormData] = useState({
     name: '',
     rating: 5,
@@ -30,7 +32,7 @@ function Feedbackreceive() {
     setMessage('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/feedback', {
+      const response = await fetch(`${API_BASE_URL}/api/feedback`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,7 +41,7 @@ function Feedbackreceive() {
       });
 
       if (!response.ok) throw new Error('Submission failed');
-      
+
       setMessage('Feedback submitted successfully!');
       setFormData({ name: '', rating: 5, comment: '' });
     } catch (err) {

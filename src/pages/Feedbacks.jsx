@@ -23,6 +23,7 @@ const Feedbacks = () => {
 
       const data = await response.json();
       setFeedbacks(data);
+      setError(null);
     } catch (err) {
       setError(err.message.includes('aborted')
         ? 'Request timed out. Check your connection.'
