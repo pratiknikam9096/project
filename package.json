@@ -17,7 +17,8 @@
   "main": "eslint.config.js",
   "scripts": {
     "dev": "vite --host  0.0.0.0 ",
-    "build": "vite build",
+    "build": "react-scripts build",
+    "start": "react-scripts start",
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "node server.js"
