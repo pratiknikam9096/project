@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import video from '../assets/v1.mp4';
+import ProductPage from './ProductPage';
 
 function Home() {
   const [showPopup, setShowPopup] = useState(true);
@@ -21,7 +22,7 @@ function Home() {
   ];
 
   // New "Paint for Sell" service
-  const specialService = { title: 'Paint for Sell', icon: '🖌️', link: '/Projects' };
+  const specialService = { title: 'Paint for Sell', icon: '🖌️', link: '/ProductPage' };
 
   return (
     <div className="min-h-screen relative">

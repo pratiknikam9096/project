@@ -8,6 +8,9 @@ import Projects from './pages/Projects'
 import Contact from './pages/Contact'
 import Feedbacks from './pages/Feedbacks'
 import ColorPicker from './pages/ColorPicker'
+import ProductPage from './pages/ProductPage'
+
+
 
 function App() {
   return (
@@ -22,6 +25,7 @@ function App() {
           <Route path="/Feedback" element={<Feedbacks />} />
           <Route path="/color-picker" element={<ColorPicker />} />
           <Route path="/Feedbackreceive" element={<Feedbackreceive/>}/>
+          <Route path="/ProductPage" element={<ProductPage />} /> 
         </Routes>
       </main>
       <Footer />

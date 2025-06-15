@@ -11,7 +11,7 @@ const Feedbacks = () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-      const response = await fetch('http://localhost:5000/api/feedback?limit=5', {
+      const response = await fetch('http://localhost:5001/api/feedback?limit=5', {
         signal: controller.signal
       });
 
