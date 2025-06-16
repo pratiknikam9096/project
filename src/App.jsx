@@ -9,7 +9,8 @@ import Contact from './pages/Contact'
 import Feedbacks from './pages/Feedbacks'
 import ColorPicker from './pages/ColorPicker'
 import ProductPage from './pages/ProductPage'
-
+import CartPage from './pages/CartPage';
+import { CartProvider } from './components/CartContext';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <main>
+        <CartProvider>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -26,7 +28,9 @@ function App() {
           <Route path="/color-picker" element={<ColorPicker />} />
           <Route path="/Feedbackreceive" element={<Feedbackreceive/>}/>
           <Route path="/ProductPage" element={<ProductPage />} /> 
-        </Routes>
+           <Route path="/cart" element={<CartPage />} />
+           </Routes>
+        </CartProvider>
       </main>
       <Footer />
     </div>

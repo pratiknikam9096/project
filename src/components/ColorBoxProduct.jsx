@@ -1,26 +1,13 @@
 import { useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  MenuItem,
-  Select,
-  Button,
-  Box,
-} from '@mui/material';
+import { Card, CardContent, CardMedia, Typography, MenuItem, Select, Button, Box } from '@mui/material';
+import { useCart } from './CartContext';
+import { Link } from 'react-router-dom';
 
 const colorOptions = [
   { name: 'White', image: 'https://www.color-name.com/images/white-color.jpg' },
   { name: 'Green', image: 'https://www.color-name.com/images/green-color.jpg' },
   { name: 'Red', image: 'https://www.color-name.com/images/red-color.jpg' },
   { name: 'Blue', image: 'https://www.color-name.com/images/blue-color.jpg' },
-  { name: 'Yellow', image: 'https://www.color-name.com/images/yellow-color.jpg' },
-  { name: 'Black', image: 'https://www.color-name.com/images/black-color.jpg' },
-  { name: 'Orange', image: 'https://www.color-name.com/images/orange-color.jpg' },
-  { name: 'Pink', image: 'https://www.color-name.com/images/pink-color.jpg' },
-  { name: 'Purple', image: 'https://www.color-name.com/images/purple-color.jpg' },
-  { name: 'Brown', image: 'https://www.color-name.com/images/brown-color.jpg' },
 ];
 
 const quantityOptions = [
@@ -34,11 +21,22 @@ const basePricePerLiter = 105;
 export default function ColorBoxProduct() {
   const [selectedColor, setSelectedColor] = useState(colorOptions[0]);
   const [selectedQuantity, setSelectedQuantity] = useState(quantityOptions[0]);
+  const [added, setAdded] = useState(false);
+  const { addToCart } = useCart();
 
   const price = selectedQuantity.value * basePricePerLiter;
 
+  function handleAdd() {
+    addToCart({
+      name: selectedColor.name,
+      quantity: selectedQuantity.value,
+      price: price,
+    });
+    setAdded(true);
+  }
+
   return (
-    <Card sx={{ maxWidth: 300, m: 2, boxShadow: 3 }}>
+    <Card sx={{ maxWidth: 300, m: 2 }}>
       <CardMedia
         component="img"
         height="180"
@@ -46,9 +44,7 @@ export default function ColorBoxProduct() {
         alt={selectedColor.name}
       />
       <CardContent>
-        <Typography variant="h6" gutterBottom>
-          {selectedColor.name} Paint
-        </Typography>
+        <Typography variant="h6">{selectedColor.name} Paint</Typography>
 
         <Box sx={{ my: 1 }}>
           <Typography variant="body2">Select Color</Typography>
@@ -88,13 +84,21 @@ export default function ColorBoxProduct() {
           </Select>
         </Box>
 
-        <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
+        <Typography variant="h6" color="primary">
           ₹{price}
         </Typography>
 
-        <Button variant="contained" fullWidth sx={{ mt: 2 }}>
-          Add to Cart
-        </Button>
+        {added ? (
+          <Link to="/cart">
+            <Button variant="outlined" fullWidth sx={{ mt: 2 }}>
+              View Cart
+            </Button>
+          </Link>
+        ) : (
+          <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={handleAdd}>
+            Add to Cart
+          </Button>
+        )}
       </CardContent>
     </Card>
   );
