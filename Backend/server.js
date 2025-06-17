@@ -1,14 +1,16 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const serverless = require('serverless-http');
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 // Replace myDatabaseName with your actual DB name if you want, or leave it empty to use default
-const mongoURI = "mongodb+srv://nikampratik2989:DhSr2nePHaA8Znkt@cluster0.m8wc0ad.mongodb.net/myDatabaseName?retryWrites=true&w=majority&appName=Cluster0";
+const mongoURI = process.env.MONGOURI;
 
 let isConnected = false;
 
