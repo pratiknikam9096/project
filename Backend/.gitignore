@@ -7,6 +7,8 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+#sensitive information 
+.env
 # Runtime data
 pids
 *.pid

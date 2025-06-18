@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  Backend:
+    build: ./Backend
+    container_name: Backend
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+    networks:
+      - app-network
+
+  clint:
+    build: ./client
+    container_name: client
+    ports:
+      - "5173:5173"
+    environment:
+      - REACT_APP_API_URL=http://backend:5001
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
