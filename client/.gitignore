@@ -10,8 +10,12 @@ lerna-debug.log*
 # Dependency directories
 node_modules/
 
-#sensitive information 
+# Ignore environment variables
 .env
+.env.local
+.env.development
+.env.production
+.env.*.local
 
 # Build output
 dist/
