@@ -32,6 +32,10 @@ async function connectDB() {
 }
 
 // Routes
+app.get('/', (req, res) => {
+  res.send('✅ Server is up and running!');
+});
+
 app.get('/api/feedback', async (req, res) => {
   try {
     await connectDB();

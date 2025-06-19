@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Star } from 'lucide-react';
 
 function Feedbackreceive() {
-  const API_BASE_URL =  'http://localhost:5001';
+  const API_BASE_URL=import.meta.env.VITE_API_URL;
 
   const [formData, setFormData] = useState({
     name: '',
